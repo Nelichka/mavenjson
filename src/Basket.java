@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Basket {
+public class Basket implements Serializable {
     private int[] prices;
     private String[] products;
     private int[] totalBasket;
@@ -64,39 +64,20 @@ public class Basket {
         }
     }
 
-    public static Basket loadFromTxtFile(File textFile) throws IOException {
+    public void saveBin(File binFile, Basket basket) throws IOException {
+        binFile = new File(binFile.toURI());
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(binFile))) {
+            out.writeObject(basket);
+        }
+    }
 
-        String[] productsInBasket;
-        String[] productNames;
-        String[] pricesInBasket;
-        String[] isProduct;
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(textFile))) {
-            if (textFile.exists()) {
-                productsInBasket = reader.readLine().split(" ");
-                productNames = reader.readLine().split(" ");
-                pricesInBasket = reader.readLine().split(" ");
-                int[] pricesInt = new int[pricesInBasket.length];
-                for (int i = 0; i < pricesInBasket.length; i++) {
-                    pricesInt[i] = Integer.parseInt(pricesInBasket[i]);
-                }
-                Basket basket = new Basket(pricesInt, productNames);
-                for (int i = 0; i < productsInBasket.length; i++) {
-                    basket.totalBasket[i] = Integer.parseInt(productsInBasket[i]);
-                }
+    public static Basket loadFromBin(File binFile) throws IOException, ClassNotFoundException {
 
-                for (int i = 0; i < productNames.length; i++) {
-                    basket.products[i] = productNames[i];
-                }
-
-                isProduct = reader.readLine().split(" ");
-                for (int i = 0; i < isProduct.length; i++) {
-                    basket.isFilled[i] = Boolean.parseBoolean(isProduct[i]);
-                }
-                return basket;
-            } else {
-                return new Basket(null, null, null, null);
-            }
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(binFile))) {
+            Basket obj = (Basket) in.readObject();
+            return obj;
         }
     }
 }
+
