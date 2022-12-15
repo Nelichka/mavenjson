@@ -42,27 +42,6 @@ public class Basket implements Serializable {
         System.out.println("Общая стоимость = " + sum + " руб.");
     }
 
-    public void saveTxt(File textFile) throws IOException {
-        textFile = new File(textFile.toURI());
-        try (PrintWriter out = new PrintWriter(textFile)) {
-            for (int i = 0; i < totalBasket.length; i++) {
-
-                out.print(totalBasket[i] + " ");
-            }
-            out.println();
-            for (int j = 0; j < totalBasket.length; j++) {
-                out.print(products[j] + " ");
-            }
-            out.println();
-            for (int x = 0; x < prices.length; x++) {
-                out.print(prices[x] + " ");
-            }
-            out.println();
-            for (int y = 0; y < isFilled.length; y++) {
-                out.print(isFilled[y] + " ");
-            }
-        }
-    }
 
     public void saveBin(File binFile, Basket basket) throws IOException {
         binFile = new File(binFile.toURI());
